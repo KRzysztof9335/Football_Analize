@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
 # Standard modules
+import os
 import sys
-sys.path.insert(0, './modules')
+sys.path.insert(0, '{0}/modules'.format(os.environ['REPO_ROOT']))
 
 # User defined modules
 import configuration as CFG
