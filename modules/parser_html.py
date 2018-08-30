@@ -27,14 +27,61 @@ def parser_html_get_round_all_html_tables(infobank_round, string_input):
 def parser_html_remove_all_comments(string_input):
 	return re.sub(CFG.rx_html_comment, '', string_input)
 
+
+def parser_html_get_team_from_hyperlink(hyperlink):
+	rx_html_team = re.compile("<a\s+href=\"\/teams\/(.*?)\/.*")
+	try: return re.search(rx_html_team, hyperlink).group(1)
+	except: return None
+
+def parser_html_get_round_match_report_link(hyperlink):
+	rx_round_match_raport = re.compile('<a\s+href="(\/.*?)".*')
+	try: return CFG.CONFIG_MATCHES_INFO_URL + re.search(rx_round_match_raport, hyperlink).group(1)
+	except: None
+
+def parser_html_get_round_match_scores(hyperlink):
+	rx_match_scores = re.compile('<.*?>(\d+):(\d+)\s+\((\d+):(\d+)\)\s+<.*?>')
+	try: 
+		results = re.search(rx_match_scores, hyperlink)
+		return (results.group(1), results.group(2), results.group(3), results.group(4))
+	except: return None 
+
+# For fnction below write unittest
+def parser_html_sanitize_round_match(raw_round_match, first_round_match_date):
+	if raw_round_match[0]: match_date = raw_round_match[0]
+	else: match_date = first_round_match_date
+	match_hour = raw_round_match[1]
+	match_home_team = parser_html_get_team_from_hyperlink(raw_round_match[2])
+	match_away_team = parser_html_get_team_from_hyperlink(raw_round_match[4])
+	match_report = parser_html_get_round_match_report_link(raw_round_match[5])
+	HTFT, ATFT, HTHT, ATHT = parser_html_get_round_match_scores(raw_round_match[5])
+	match_stats = [match_date, match_hour, match_home_team, match_away_team, HTFT, ATFT, HTHT, ATHT, match_report]
+	if all(match_stats): return match_stats
+	else: CFG.logger.critical("No match info")
+
+def parser_html_sanitize_round_matches(raw_round_matches):
+	"""
+	HTFT = home team full time
+	HTHT = home team half time
+	ATFT = away team full time
+	ATHT = away team half time
+	Output: list of list e.g [['date', 'hour', 'hometeamA', 'awayteamB', HTFT, 'ATFT', 'HTFT', 'ATHT', detail_raport],
+							  ['date', 'hour', 'hometeamC', 'awayteamD', HTFT, 'ATFT', 'HTFT', 'ATHT', detail_raport]]
+	"""
+	sanitized_matches = []
+	first_round_match_date = raw_round_matches[0][0]
+	for raw_round_matches in raw_round_matches:
+		sanitized_matches.append(parser_html_sanitize_round_match(raw_round_matches, first_round_match_date))
+	return sanitized_matches
+
+
 def parser_html_get_round_results(infobank_round, string_input):
 	html = parser_html_remove_all_comments(string_input)
 	all_html_tables = parser_html_get_round_all_html_tables(infobank_round, html) # Return list of found tables
 	raw_round_table = parser_html_get_table_content(all_html_tables[3])
 	raw_round_matches = parser_html_get_table_content(all_html_tables[1])
+	round_matches = parser_html_sanitize_round_matches(raw_round_matches)
 
-
-	for r in raw_round_matches:
+	for r in round_matches:
 		print("\n".join(r))
 	# Here should be continuation of code...
 	sys.exit(1)
