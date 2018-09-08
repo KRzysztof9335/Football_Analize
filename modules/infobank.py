@@ -3,36 +3,56 @@ import os
 
 # User defined modules
 import configuration as CFG
+import common as CMN
 import parser_html as PH
 import webhandler as WH
 
-# Main.py
-# 	Database"
-#		Germany:
-#			bundesliga
-#				2017-2018 
-# 					Round1
-#						round_table.txt
-#						match_1_team1_team2.txt
-#						match_2_team3_team4.txt
-#					Round2.txt
-#						...
-#					Round34.txt
+def infobank_save_round_table(infobank_round, content_to_write_round_table):
+	round_table_file = os.path.join(infobank_round, "round_table.txt")
+	CMN.common_write_to_file(round_table_file, content_to_write_round_table)
 
+def infobank_save_round_matches(infobank_round, round_matches_names, content_to_write_round_matches):
+	for  match_name, match_stats in zip(round_matches_names, content_to_write_round_matches):
+		match_stats_file = os.path.join(infobank_round, match_name)
+		CMN.common_write_to_file(match_stats_file, match_stats)
 
-def infobank_create_country_league_season_round(country, league, season, play_round):
-	infobank_round = os.path.join(CFG.CONFIG_INFO_BANK_ROOT, country, league, '{0}-{1}'.format(season, season+1),'round_{0}'.format(play_round))
+def infobank_create_content_to_write_round_table(round_table_rows):
+	content_to_write_raw = [";".join(round_table_row) for round_table_row in round_table_rows]
+	content_to_write = "\n".join(content_to_write_raw)
+	return content_to_write
+		
+def infobank_create_content_to_write_round_matches(round_table_matches):
+	matches_names = []
+	matches_content_to_write = []
+	for round_table_match in round_table_matches:
+		match_name = 'match_' + round_table_match[2] + '_' + round_table_match[3] + '.txt'
+		match_content_to_write = "\n".join(round_table_match)
+		matches_names.append(match_name)
+		matches_content_to_write.append(match_content_to_write)
+	return matches_content_to_write, matches_names
+
+def infobank_create_country_league_season_round(infobank_round, country, league, season, play_round):
+	infobank_create_item(infobank_round)
+
 	raw_round_results = WH.webhandler_get_round_results(country, league, season, play_round)
-	if not raw_round_results:
-		CFG.logger.error("Round creation: {0} unexpected error".format(infobank_round))
-		return False
+	if not raw_round_results:CFG.logger.critical("Round creation: {0} unexpected error".format(infobank_round))
 	round_table, round_matches = PH.parser_html_get_round_results(infobank_round, raw_round_results)
-	return True
-	# Here will be code represnting what to do if we have web page as string 
+
+	content_to_write_round_table = infobank_create_content_to_write_round_table(round_table)
+	content_to_write_round_matches, round_matches_names = infobank_create_content_to_write_round_matches(round_matches)
+
+	infobank_save_round_table(infobank_round, content_to_write_round_table)
+	infobank_save_round_matches(infobank_round, round_matches_names, content_to_write_round_matches)
 
 def infobank_create_country_league_season_rounds(country, league, season, CFG_CONFIG_ROUNDS):
 	for play_round in range(1,CFG_CONFIG_ROUNDS):
-		infobank_create_country_league_season_round(country, league, season, play_round)
+		infobank_round = os.path.join(CFG.CONFIG_INFO_BANK_ROOT, country, league, '{0}-{1}'.format(season, season+1),'round_{0}'.format(play_round))
+		try:
+			if os.stat(os.path.join(infobank_round,"round_table.txt")).st_size != 0: round_exists = True
+			else: round_exists = False	
+		except: round_exists = False
+		if round_exists: CFG.logger.debug("Round {0} alredy exists - skipping creation".format(infobank_round))
+		else:infobank_create_country_league_season_round(infobank_round, country, league, season, play_round)
 
 def infobank_create_country_league_season(country, league, season):
 	infobank_create_item(os.path.join(CFG.CONFIG_INFO_BANK_ROOT, country, league, '{0}-{1}'.format(season, season+1)))

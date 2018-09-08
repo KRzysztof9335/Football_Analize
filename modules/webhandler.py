@@ -1,4 +1,5 @@
 # Standard modules
+import sys
 import urllib.request
 
 # User defined modules
@@ -12,7 +13,8 @@ def webhandler_verify_url_is_alive(url):
 		CFG.logger.debug("Web page: {0} exists".format(url))
 		return True
 	except:
-		CFG.logger.debug("Web page: {0} does not exist".format(url))
+		CFG.logger.critical("Web page: {0} does not exist".format(url))
+		sys.exit(1)
 	return False
 
 def webhandler_download_webpage_content(url_to_download):

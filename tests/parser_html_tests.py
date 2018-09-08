@@ -59,7 +59,6 @@ class function_parser_html_sanitize_round_matches(unittest.TestCase):
 	def test_correct_input(self):
 		self.assertEqual(PH.parser_html_sanitize_round_matches(self.raw_round_matches_in), self.raw_round_matches_out)
 
-
 class function_parser_html_sanitize_round_match(unittest.TestCase):
 
 	def setUp(self):
@@ -94,12 +93,29 @@ class function_parser_html_get_round_match_score(unittest.TestCase):
 		self.assertEqual(PH.parser_html_get_round_match_scores('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>'), ('6', '0', '2', '0'))
 		self.assertEqual(PH.parser_html_get_round_match_scores('<a href="/report/report-1" title="TI2">16:15 (11:14) </a>'), ('16', '15', '11', '14'))
 
+class function_parser_html_sanitize_round_table_row(unittest.TestCase):
 
+	def setUp(self):
+		self.example_1 = ['1', '<img src="https:22.gif alt="team-a, country" title="team-a, country" />', '<a href="/teams/team-a/" title="team-a">', '1', '1', '0', '0', '6:0', '6', '3']
+		self.example_1_out = ['1', 'team-a', '1', '1', '0', '0', '6', '0', '6', '3']
 
+		self.example_2 = ['&nbsp', '<img src="https:22.gif alt="team-b, country" title="team-b, country" />', '<a href="/teams/team-b/" title="team-a">', '1', '0', '0', '1', '0:6', '-6', '0']
+		self.example_2_out = ['16', 'team-b', '1', '0', '0', '1', '0', '6', '-6', '0']
 
+	def test_correct(self):
+		self.assertEqual(PH.parser_html_sanitize_round_table_row(self.example_1, 1), (self.example_1_out, '1'))
+		self.assertEqual(PH.parser_html_sanitize_round_table_row(self.example_2, 15), (self.example_2_out, '16'))
 
+class function_parser_html_sanitize_round_table(unittest.TestCase):
 
+	def setUp(self):
+		self.round_table_rows_in = [['1', '<img src="https:22.gif alt="team-a, country" title="team-a, country" />', '<a href="/teams/team-a/" title="team-a">', '1', '1', '0', '0', '6:0', '6', '3'],
+							    	['&nbsp', '<img src="https:22.gif alt="team-b, country" title="team-b, country" />', '<a href="/teams/team-b/" title="team-a">', '1', '0', '0', '1', '0:6', '-6', '0']]
+		self.round_table_rows_out = [['1', 'team-a', '1', '1', '0', '0', '6', '0', '6', '3'],
+									 ['2', 'team-b', '1', '0', '0', '1', '0', '6', '-6', '0']]
 
+	def test_correct(self):
+		self.assertEqual(PH.parser_html_sanitize_round_table(self.round_table_rows_in), self.round_table_rows_out)
 
 
 if __name__ == '__main__':
