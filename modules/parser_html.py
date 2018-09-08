@@ -32,7 +32,7 @@ def parser_html_get_team_from_hyperlink(hyperlink):
 	except: return None
 
 def parser_html_get_round_match_report_link(hyperlink):
-	try: return CFG.CONFIG_MATCHES_INFO_URL + re.search(CFG.rx_html_hyperlink, hyperlink).group(1)
+	try: return CFG.MATCHES_INFO_URL + re.search(CFG.rx_html_hyperlink, hyperlink).group(1)
 	except: None
 
 def parser_html_get_round_match_scores(hyperlink):

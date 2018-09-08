@@ -1,4 +1,5 @@
 # Standard modules
+import datetime
 import logging
 import re
 import os
@@ -7,16 +8,17 @@ logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def init():
-	global CONFIG_INFO_BANK_ROOT
-	global CONFIG_REPO_ROOT
-	global CONFIG_SUPPORTED_LEAGUES
-	global CONFIG_MATCHES_INFO_URL
-	global CONFIG_CURRENT_SEASON
-	global CONFIG_SEASONS_BACK
-	global CONFIG_ROUNDS
-	global CONFIG_MATCHES_IN_ROUND
-	global CONFIG_SEASONS
-	global CONFIG_WEB_CONNECTION
+	global CURRENT_YEAR
+	global INFO_BANK_ROOT
+	global REPO_ROOT
+	global SUPPORTED_LEAGUES
+	global MATCHES_INFO_URL
+	global CURRENT_SEASON
+	global SEASONS_BACK
+	global ROUNDS
+	global MATCHES_IN_ROUND
+	global SEASONS
+	global WEB_CONNECTION
 
 	global rx_html_comment
 	global rx_html_table
@@ -26,16 +28,17 @@ def init():
 	global rx_html_hyperlink
 	global rx_html_hyperlink_team
 
-	CONFIG_REPO_ROOT = os.environ['REPO_ROOT']
-	CONFIG_INFO_BANK_ROOT = os.path.join(CONFIG_REPO_ROOT,'infobank')
-	CONFIG_SUPPORTED_LEAGUES = [('Germany','bundesliga')]
-	CONFIG_MATCHES_INFO_URL = 'www.worldfootball.net'
-	CONFIG_WEB_CONNECTION = 'http://'
-	CONFIG_CURRENT_SEASON = 2017
-	CONFIG_SEASONS_BACK = 1 #3
-	CONFIG_ROUNDS = 9 #9
-	CONFIG_MATCHES_IN_ROUND = 1 # In other countries this may vary
-	CONFIG_SEASONS = range(CONFIG_CURRENT_SEASON-CONFIG_SEASONS_BACK, CONFIG_CURRENT_SEASON)
+	CURRENT_YEAR = datetime.datetime.now().year
+	REPO_ROOT = os.environ['REPO_ROOT']
+	INFO_BANK_ROOT = os.path.join(REPO_ROOT,'infobank')
+	SUPPORTED_LEAGUES = [('Germany','bundesliga')]
+	MATCHES_INFO_URL = 'www.worldfootball.net'
+	WEB_CONNECTION = 'http://'
+	CURRENT_SEASON = 2018 # Curremt is 2018-2019
+	SEASONS_BACK = 0 #3
+	ROUNDS = 34 #9
+	MATCHES_IN_ROUND = 1 # In other countries this may vary
+	SEASONS = list(range(CURRENT_SEASON-SEASONS_BACK, CURRENT_SEASON + 1))
 
 	rx_html_comment = re.compile('<!--.*?-->', re.DOTALL)
 	rx_html_table = re.compile('<table.*?</table>', re.DOTALL)
