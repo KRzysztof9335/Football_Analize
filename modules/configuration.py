@@ -36,7 +36,7 @@ def init():
 	WEB_CONNECTION = 'http://'
 	CURRENT_SEASON = 2018 # Curremt is 2018-2019
 	SEASONS_BACK = 0 #3
-	ROUNDS = 34 #9
+	ROUNDS = 10 #9
 	MATCHES_IN_ROUND = 1 # In other countries this may vary
 	SEASONS = list(range(CURRENT_SEASON-SEASONS_BACK, CURRENT_SEASON + 1))
 

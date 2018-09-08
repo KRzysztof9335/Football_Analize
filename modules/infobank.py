@@ -57,8 +57,8 @@ def infobank_verify_if_create_round(infobank_round, country, league, season, pla
 	"""
 	try:
 		if os.stat(os.path.join(infobank_round,"round_table.txt")).st_size != 0:
-			CFG.logger.debug("Round {0} alredy exists - skipping further rounds creation".format(infobank_round))
-			return False, ""
+			CFG.logger.debug("Round {0} alredy exists - skipping round creation".format(infobank_round))
+			return "skip_round_creation", ""
 	except (IOError, ValueError):
 		pass # Catching error when file does not exist
 	except:
@@ -69,19 +69,21 @@ def infobank_verify_if_create_round(infobank_round, country, league, season, pla
 	raw_round_matches = PH.parser_html_get_table_content(all_html_tables[1])
 	if "-:-" in raw_round_matches[0][5]:
 		CFG.logger.debug("Round {0} is future round - skipping further rounds creation".format(infobank_round))
-		return False, ""
-	return True, raw_round_results
+		return "skip_all", ""
+	return "create_round", raw_round_results
 
 def infobank_verify_if_create_season(season):
 	if (int(season) > CFG.CURRENT_YEAR): return False
 	return True
 
 def infobank_create_country_league_season_rounds(country, league, season, CFG_ROUNDS):
-	for play_round in range(1,CFG_ROUNDS):
+	for play_round in list(range(1,CFG_ROUNDS + 1)):
 		infobank_round = os.path.join(CFG.INFO_BANK_ROOT, country, league, '{0}-{1}'.format(season, season+1),'round_{0}'.format(play_round))
-		create_round, raw_round_results = infobank_verify_if_create_round(infobank_round, country, league, season, play_round)
-		if create_round:
+		round_action, raw_round_results = infobank_verify_if_create_round(infobank_round, country, league, season, play_round)
+		if round_action == "create_round":
 			infobank_create_country_league_season_round(infobank_round, country, league, season, play_round, raw_round_results)
+		elif round_action == "skip_round_creation":
+			continue
 		else:
 			break
 
