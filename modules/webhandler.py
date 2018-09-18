@@ -1,5 +1,7 @@
 # Standard modules
+import random
 import sys
+import time
 import urllib.request
 
 # User defined modules
@@ -17,6 +19,7 @@ def webhandler_verify_url_is_alive(url):
 		return False
 
 def webhandler_download_webpage_content(url_to_download):
+	time.sleep(random.randint(CFG.SLEEP_LOW, CFG.SLEEP_HIGH))
 	return urllib.request.urlopen(url_to_download).read().decode('utf-8')
 
 def webhandler_get_webpage_content(url_to_download):
@@ -30,8 +33,7 @@ def webhandler_get_webpage_content(url_to_download):
 def webhandler_set_round_results_url(league, season, play_round):
 	 return "https://{0}/{1}/{2}-{3}-{4}-spieltag/{5}".format(CFG.MATCHES_INFO_URL, 'schedule', league, season, season+1, play_round)
 
-def webhandler_get_round_results(country, league, season, play_round):
-	url = webhandler_set_round_results_url(league, season, play_round)
+def webhandler_get_round_results(url):
 	return webhandler_get_webpage_content(url)
 	
 
