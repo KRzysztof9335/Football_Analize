@@ -4,8 +4,28 @@ import logging
 import re
 import os
 
-logging.basicConfig(level=logging.DEBUG)
+#logging.basicConfig(level=logging.DEBUG)
+#logger = logging.getLogger(__name__)
+
 logger = logging.getLogger(__name__)
+FORMAT = "%(levelname)s:[%(funcName)s()]: %(message)s"
+logging.basicConfig(format=FORMAT)
+logger.setLevel(logging.DEBUG)
+
+
+
+class CountryLeague():
+
+	def __init__(self, country, league_name,
+					   league_rounds, league_matches_in_round,
+					   league_name_wf, league_name_fd):
+		self.country = country
+		self.league_name = league_name
+		self.league_rounds = league_rounds
+		self.league_matches_in_round = league_matches_in_round
+		self.league_name_wf = league_name_wf
+		self.league_name_fd = league_name_fd
+
 
 def init():
 	global CURRENT_YEAR
@@ -32,6 +52,11 @@ def init():
 	REPO_ROOT = os.environ['REPO_ROOT']
 	INFO_BANK_ROOT = os.path.join(REPO_ROOT,'infobank')
 	SUPPORTED_LEAGUES = [('Germany','bundesliga')]
+
+	SL2 = [CountryLeague('Germany', 'bundesliga_1', 34, 9, 'bundesliga', 'D1')]
+
+
+
 	MATCHES_INFO_URL = 'www.worldfootball.net'
 	WEB_CONNECTION = 'http://'
 	CURRENT_SEASON = 2018 # Curremt is 2018-2019
