@@ -72,20 +72,19 @@ def infobank_verify_if_create_round(infobank_round, country, league, season, pla
 		return "skip_all", ""
 	return "create_round", raw_round_results
 
-def infobank_verify_if_create_season(season):
-	if (int(season) > CFG.CURRENT_YEAR): return False
+def infobank_verify_if_create_season(country, league, season):
+	if (int(season) > CFG.CURRENT_YEAR):
+		CFG.logger.debug("For {0}/{1} infobank creation stopped - season {2} is future season".format(country, league, season))
+		return False
 	return True
 
 def infobank_create_country_league_season_rounds(country, league, season, CFG_ROUNDS):
 	for play_round in list(range(1,CFG_ROUNDS + 1)):
 		infobank_round = os.path.join(CFG.INFO_BANK_ROOT, country, league, '{0}-{1}'.format(season, season+1),'round_{0}'.format(play_round))
 		round_action, raw_round_results = infobank_verify_if_create_round(infobank_round, country, league, season, play_round)
-		if round_action == "create_round":
-			infobank_create_country_league_season_round(infobank_round, country, league, season, play_round, raw_round_results)
-		elif round_action == "skip_round_creation":
-			continue
-		else:
-			break
+		if round_action == "create_round": infobank_create_country_league_season_round(infobank_round, country, league, season, play_round, raw_round_results)
+		elif round_action == "skip_round_creation": continue
+		else: break
 
 def infobank_create_country_league_season(country, league, season):
 	infobank_create_item(os.path.join(CFG.INFO_BANK_ROOT, country, league, '{0}-{1}'.format(season, season+1)))
@@ -93,12 +92,9 @@ def infobank_create_country_league_season(country, league, season):
 	
 def infobank_create_country_league_seasons(country, league, seasons):
 	for season in seasons:
-		create_season = infobank_verify_if_create_season(season)
-		if create_season:
-			infobank_create_country_league_season(country, league, season)
-		else:
-			CFG.logger.debug("For {0}/{1} infobank creation stopped - season {2} is future season".format(country, league, season))
-			break
+		create_season = infobank_verify_if_create_season(country, league, season)
+		if create_season: infobank_create_country_league_season(country, league, season)
+		else: break
 
 def infobank_create():
 	infobank_create_item(CFG.INFO_BANK_ROOT)
