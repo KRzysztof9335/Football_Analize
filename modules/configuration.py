@@ -39,6 +39,8 @@ def init():
 	global MATCHES_IN_ROUND
 	global SEASONS
 	global WEB_CONNECTION
+	global SLEEP_LOW
+	global SLEEP_HIGH
 
 	global rx_html_comment
 	global rx_html_table
@@ -51,18 +53,15 @@ def init():
 	CURRENT_YEAR = datetime.datetime.now().year
 	REPO_ROOT = os.environ['REPO_ROOT']
 	INFO_BANK_ROOT = os.path.join(REPO_ROOT,'infobank')
-	SUPPORTED_LEAGUES = [('Germany','bundesliga')]
+	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 34, 3, 'bundesliga', 'D1')]
 
-	SL2 = [CountryLeague('Germany', 'bundesliga_1', 34, 9, 'bundesliga', 'D1')]
-
-
+	SLEEP_LOW = 13
+	SLEEP_HIGH = 20
 
 	MATCHES_INFO_URL = 'www.worldfootball.net'
 	WEB_CONNECTION = 'http://'
 	CURRENT_SEASON = 2018 # Curremt is 2018-2019
 	SEASONS_BACK = 0 #3
-	ROUNDS = 10 #9
-	MATCHES_IN_ROUND = 1 # In other countries this may vary
 	SEASONS = list(range(CURRENT_SEASON-SEASONS_BACK, CURRENT_SEASON + 1))
 
 	rx_html_comment = re.compile('<!--.*?-->', re.DOTALL)
