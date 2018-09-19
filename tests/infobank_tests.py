@@ -59,4 +59,5 @@ class function_infobank_verify_if_create_season(unittest.TestCase):
 
 if __name__ == '__main__':
 	CFG.init()
+	CFG.logger.setLevel(CFG.logging.CRITICAL)
 	unittest.main()

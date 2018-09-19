@@ -12,10 +12,10 @@ def webhandler_verify_url_is_alive(url):
 	conn_handler.get_method = lambda: 'HEAD'
 	try:
 		urllib.request.urlopen(conn_handler)
-		CFG.logger.debug("Web page: {0} exists".format(url))
+		CFG.logger.debug("Web page: {0} is alive".format(url))
 		return True
 	except:
-		CFG.logger.critical("Web page: {0} does not exist".format(url))
+		CFG.logger.critical("Web page: {0} is not alive".format(url))
 		return False
 
 def webhandler_download_webpage_content(url_to_download):
@@ -23,9 +23,8 @@ def webhandler_download_webpage_content(url_to_download):
 	return urllib.request.urlopen(url_to_download).read().decode('utf-8')
 
 def webhandler_get_webpage_content(url_to_download):
-	url_webpage_exists = webhandler_verify_url_is_alive(url_to_download)
-	if not url_webpage_exists:
-		return ""
+	url_webpage_is_alive = webhandler_verify_url_is_alive(url_to_download)
+	if not url_webpage_is_alive: sys.exit(1)
 	url_webpage_content = webhandler_download_webpage_content(url_to_download)
 	CFG.logger.debug("Downloaded content from: {0}".format(url_to_download))
 	return url_webpage_content

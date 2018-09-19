@@ -14,7 +14,6 @@ def main():
 	CFG.init()
 	CFG.logger.info("Creating infobank: started")
 	IB.infobank_create()
-#	check_for_updates(SUPPORTED_LEAGUES)
 	CFG.logger.info("Creating infobank: success")
 	CFG.logger.info("Main finished")
 

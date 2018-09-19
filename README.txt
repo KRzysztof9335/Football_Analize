@@ -8,6 +8,16 @@ Sources:
 	- wf - worldfootball.net
 	- fd - footballdata.uk
 
+Variable names suffixes:
+	- A - array
+	- AA - array of arrays
+	- AD - array of dictionaries
+	- S - string
+	- I - integer number
+	- F - float number
+	- C - class
+	- B - bolean
+
 Main.py
 	Database"
 		Germany:

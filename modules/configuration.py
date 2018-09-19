@@ -29,18 +29,30 @@ class CountryLeague():
 
 def init():
 	global CURRENT_YEAR
-	global INFO_BANK_ROOT
+	global IB_ROOT
 	global REPO_ROOT
 	global SUPPORTED_LEAGUES
-	global MATCHES_INFO_URL
+	global URL_WF_ROOT
 	global CURRENT_SEASON
 	global SEASONS_BACK
-	global ROUNDS
-	global MATCHES_IN_ROUND
 	global SEASONS
 	global WEB_CONNECTION
 	global SLEEP_LOW
 	global SLEEP_HIGH
+
+	CURRENT_YEAR = datetime.datetime.now().year
+	REPO_ROOT = os.environ['REPO_ROOT']
+	IB_ROOT = os.path.join(REPO_ROOT,'infobank')
+	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 2, 3, 'bundesliga', 'D1')]
+
+	SLEEP_LOW = 13
+	SLEEP_HIGH = 20
+
+	URL_WF_ROOT = 'www.worldfootball.net'
+	WEB_CONNECTION = 'http://'
+	CURRENT_SEASON = 2018 # Curremt is 2018-2019 (so 2018)
+	SEASONS_BACK = 0 #3
+	SEASONS = list(range(CURRENT_SEASON-SEASONS_BACK, CURRENT_SEASON + 1))
 
 	global rx_html_comment
 	global rx_html_table
@@ -49,20 +61,6 @@ def init():
 	global rx_html_match_scores
 	global rx_html_hyperlink
 	global rx_html_hyperlink_team
-
-	CURRENT_YEAR = datetime.datetime.now().year
-	REPO_ROOT = os.environ['REPO_ROOT']
-	INFO_BANK_ROOT = os.path.join(REPO_ROOT,'infobank')
-	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 34, 3, 'bundesliga', 'D1')]
-
-	SLEEP_LOW = 13
-	SLEEP_HIGH = 20
-
-	MATCHES_INFO_URL = 'www.worldfootball.net'
-	WEB_CONNECTION = 'http://'
-	CURRENT_SEASON = 2018 # Curremt is 2018-2019
-	SEASONS_BACK = 0 #3
-	SEASONS = list(range(CURRENT_SEASON-SEASONS_BACK, CURRENT_SEASON + 1))
 
 	rx_html_comment = re.compile('<!--.*?-->', re.DOTALL)
 	rx_html_table = re.compile('<table.*?</table>', re.DOTALL)
