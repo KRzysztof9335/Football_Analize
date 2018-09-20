@@ -37,25 +37,29 @@ class function_infobank_create_content_to_write_round_matches(unittest.TestCase)
 		self.assertEqual(names, self.output_names)
 
 
-class function_infobank_verify_if_create_round(unittest.TestCase):
+class funtion_infobank_verify_if_create_country_league_season_round(unittest.TestCase):
 
 	def setUp(self):
 		self.round = os.path.join(os.environ['REPO_ROOT'], 'tests/examples/Country/league/2017-2018/round1')
+		self.country_league = CFG.CountryLeague('C1', 'L1', 5, 3, 'L11', 'L12')
 
 	def test_round_created_previously(self):
-		create, content = IB.infobank_verify_if_create_round(self.round, 'C1', 'L1', '2001', 9)
+		create, content = IB.infobank_verify_if_create_country_league_season_round(self.country_league, '2001', 9, self.round)
 		self.assertEqual(create, "skip_round_creation")
 
 
-class function_infobank_verify_if_create_season(unittest.TestCase):
+class function_infobank_verify_if_create_country_league_season_rounds(unittest.TestCase):
 
+	def setUp(self):
+		self.country_league = CFG.CountryLeague('C1', 'L1', 5, 3, 'L11', 'L12')
+		
 	def test_year_too_big(self):
-		self.assertEqual(IB.infobank_verify_if_create_season('C','L','3000'), False)
-		self.assertEqual(IB.infobank_verify_if_create_season('C','L',str(CFG.CURRENT_YEAR + 1)), False)
+		self.assertEqual(IB.infobank_verify_if_create_country_league_season_rounds(self.country_league, 3000), False)
+		self.assertEqual(IB.infobank_verify_if_create_country_league_season_rounds(self.country_league, CFG.CURRENT_YEAR + 1), False)
 
 	def test_correct_year(self):
-		self.assertEqual(IB.infobank_verify_if_create_season('C','L','2000'), True)
-		self.assertEqual(IB.infobank_verify_if_create_season('C','L',str(CFG.CURRENT_YEAR )), True)
+		self.assertEqual(IB.infobank_verify_if_create_country_league_season_rounds(self.country_league, 2000), True)
+		self.assertEqual(IB.infobank_verify_if_create_country_league_season_rounds(self.country_league, CFG.CURRENT_YEAR), True)
 
 if __name__ == '__main__':
 	CFG.init()

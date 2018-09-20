@@ -51,8 +51,8 @@ class function_parser_html_sanitize_round_matches(unittest.TestCase):
 	def setUp(self):
 		self.raw_round_matches_in = [['26/08/2016', '19:30', '<a href="/teams/team-a/" title="TA">team-a</a>', '-', '<a href="/teams/team-b/" title="TB">team-b</a>', '<a href="/report/report-1" title="TI2">6:0 (2:0) </a>', '', ''],
 							   	     ['', '14:30', '<a href="/teams/team-c/" title="TC">team-c</a>', '-', '<a href="/teams/team-d/" title="TB">team-d</a>', '<a href="/report/report-2" title="TI2">2:2 (2:1) </a>', '', '']]
-		self.raw_round_matches_out = [['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.MATCHES_INFO_URL+'/report/report-1'],
-							   	      ['26/08/2016', '14:30', 'team-c', 'team-d', '2', '2', '2', '1', CFG.MATCHES_INFO_URL+'/report/report-2']]
+		self.raw_round_matches_out = [['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.URL_WF_ROOT+'/report/report-1'],
+							   	      ['26/08/2016', '14:30', 'team-c', 'team-d', '2', '2', '2', '1', CFG.URL_WF_ROOT+'/report/report-2']]
 		# ['date', 'hour', 'hometeamA', 'awayteamB', HTFT, 'ATFT', 'HTFT', 'ATHT', detail_raport],
 
 
@@ -63,7 +63,7 @@ class function_parser_html_sanitize_round_match(unittest.TestCase):
 
 	def setUp(self):
 		self.raw_round_match_in = ['26/08/2016', '19:30', '<a href="/teams/team-a/" title="TA">team-a</a>', '-', '<a href="/teams/team-b/" title="TB">team-b</a>', '<a href="/report/report-1" title="TI2">6:0 (2:0) </a>', '', '']
-		self.raw_round_match_out =  ['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.MATCHES_INFO_URL+'/report/report-1']
+		self.raw_round_match_out =  ['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.URL_WF_ROOT+'/report/report-1']
 
 	def test_correct(self):
 		self.assertEqual(PH.parser_html_sanitize_round_match(self.raw_round_match_in, '26/08/2016'), self.raw_round_match_out)
@@ -81,7 +81,7 @@ class function_parser_html_get_team_from_hyperlink(unittest.TestCase):
 class function_parser_html_get_round_match_report_link(unittest.TestCase):
 
 	def test_correct(self):
-		self.assertEqual(PH.parser_html_get_round_match_report_link('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>)'), CFG.MATCHES_INFO_URL+'/report/report-1')
+		self.assertEqual(PH.parser_html_get_round_match_report_link('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>)'), CFG.URL_WF_ROOT+'/report/report-1')
 
 	def test_incorrect(self):
 		self.assertEqual(PH.parser_html_get_round_match_report_link('<a href="report/report-1" title="TI2">6:0 (2:0) </a>)'), None)

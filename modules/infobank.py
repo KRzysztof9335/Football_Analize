@@ -90,6 +90,9 @@ def infobank_verify_if_create_country_league_season_round_already_exists(infoban
 			sys.exit(1)
 
 
+
+
+
 def infobank_verify_if_create_country_league_season_round(country_league, season, play_round, infobank_round):
 	"""
 	This fucntion needs to download web content, so to not necessarily download content
@@ -148,7 +151,7 @@ def infobank_create_country_league_season_rounds(country_league, season):
 		elif round_action == "skip_round_creation": continue
 		else: break
 
-			
+
 
 def infobank_create_country_league_seasons(country_league):
 	"""
