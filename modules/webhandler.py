@@ -5,7 +5,7 @@ import time
 import urllib.request
 
 # User defined modules
-import configuration as CFG
+import modules.configuration as CFG
 
 def webhandler_verify_url_is_alive(url):
 	conn_handler = urllib.request.Request(url)

@@ -32,11 +32,12 @@ def init():
 	global IB_ROOT
 	global REPO_ROOT
 	global SUPPORTED_LEAGUES
-	global URL_WF_ROOT
+	global WF_URL_ROOT
+	global WF_URL_ROUND
 	global CURRENT_SEASON
 	global SEASONS_BACK
 	global SEASONS
-	global WEB_CONNECTION
+	global WEB_PROT
 	global SLEEP_LOW
 	global SLEEP_HIGH
 
@@ -48,9 +49,10 @@ def init():
 	SLEEP_LOW = 2
 	SLEEP_HIGH = 10
 
-	URL_WF_ROOT = 'www.worldfootball.net'
+	WEB_PROT = 'http://'
+	WF_URL_ROOT = WEB_PROT + 'www.worldfootball.net'
+	WF_URL_ROUND = WF_URL_ROOT + "/schedule/{0}-{1}-{2}-spieltag/{3}"
 
-	WEB_CONNECTION = 'http://'
 	CURRENT_SEASON = 2018 # Curremt is 2018-2019 (so 2018)
 	SEASONS_BACK = 0 #3
 	SEASONS = list(range(CURRENT_SEASON-SEASONS_BACK, CURRENT_SEASON + 1))

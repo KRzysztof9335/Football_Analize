@@ -20,7 +20,7 @@ class function_main(unittest.TestCase):
 		pass
 	
 	# patch will not affect next testcase :) If we want to mock we need to do it again
-	@patch('infobank.infobank_create', side_effect=mocked_infobank_create)
+	@patch('infobank.ib_create', side_effect=mocked_infobank_create)
 	def test_create_infobank_called(self, info_create):
 		main()
 		self.assertEqual(info_create.call_count, 1)

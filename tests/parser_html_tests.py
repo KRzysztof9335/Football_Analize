@@ -9,9 +9,9 @@ import unittest
 sys.path.insert(0, '{0}'.format(os.environ['REPO_ROOT']))
 sys.path.insert(0, '{0}/modules'.format(os.environ['REPO_ROOT']))
 
-import common as CMN
-import configuration as CFG
-import parser_html as PH
+import modules.common as CMN
+import modules.configuration as CFG
+import modules.parser_html as PH
 
 EXAMPLES_ROOT = os.path.join(os.environ['REPO_ROOT'],'tests/examples')
 
@@ -46,27 +46,27 @@ class fnction_parser_html_get_table_rows_columns(unittest.TestCase):
 	def test_correct_columns(self):
 		self.assertEqual(PH.parser_html_get_table_rows_columns(['<td d>C11</td>\t\n<td d>C12</td>', '<td d>C21</td>\t\n<td d>C22</td>']), [['C11','C12'], ['C21','C22']])
 
-class function_parser_html_sanitize_round_matches(unittest.TestCase):
+class function_parser_html_wf_sanitize_round_matches(unittest.TestCase):
 
 	def setUp(self):
 		self.raw_round_matches_in = [['26/08/2016', '19:30', '<a href="/teams/team-a/" title="TA">team-a</a>', '-', '<a href="/teams/team-b/" title="TB">team-b</a>', '<a href="/report/report-1" title="TI2">6:0 (2:0) </a>', '', ''],
 							   	     ['', '14:30', '<a href="/teams/team-c/" title="TC">team-c</a>', '-', '<a href="/teams/team-d/" title="TB">team-d</a>', '<a href="/report/report-2" title="TI2">2:2 (2:1) </a>', '', '']]
-		self.raw_round_matches_out = [['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.URL_WF_ROOT+'/report/report-1'],
-							   	      ['26/08/2016', '14:30', 'team-c', 'team-d', '2', '2', '2', '1', CFG.URL_WF_ROOT+'/report/report-2']]
+		self.raw_round_matches_out = [['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.WF_URL_ROOT+'/report/report-1'],
+							   	      ['26/08/2016', '14:30', 'team-c', 'team-d', '2', '2', '2', '1', CFG.WF_URL_ROOT+'/report/report-2']]
 		# ['date', 'hour', 'hometeamA', 'awayteamB', HTFT, 'ATFT', 'HTFT', 'ATHT', detail_raport],
 
 
 	def test_correct_input(self):
-		self.assertEqual(PH.parser_html_sanitize_round_matches(self.raw_round_matches_in), self.raw_round_matches_out)
+		self.assertEqual(PH.parser_html_wf_sanitize_round_matches(self.raw_round_matches_in), self.raw_round_matches_out)
 
-class function_parser_html_sanitize_round_match(unittest.TestCase):
+class function_parser_html_wf_sanitize_round_match(unittest.TestCase):
 
 	def setUp(self):
 		self.raw_round_match_in = ['26/08/2016', '19:30', '<a href="/teams/team-a/" title="TA">team-a</a>', '-', '<a href="/teams/team-b/" title="TB">team-b</a>', '<a href="/report/report-1" title="TI2">6:0 (2:0) </a>', '', '']
-		self.raw_round_match_out =  ['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.URL_WF_ROOT+'/report/report-1']
+		self.raw_round_match_out =  ['26/08/2016', '19:30', 'team-a', 'team-b', '6', '0', '2', '0', CFG.WF_URL_ROOT+'/report/report-1']
 
 	def test_correct(self):
-		self.assertEqual(PH.parser_html_sanitize_round_match(self.raw_round_match_in, '26/08/2016'), self.raw_round_match_out)
+		self.assertEqual(PH.parser_html_wf_sanitize_round_match(self.raw_round_match_in, '26/08/2016'), self.raw_round_match_out)
 
 class function_parser_html_get_team_from_hyperlink(unittest.TestCase):
 
@@ -78,22 +78,22 @@ class function_parser_html_get_team_from_hyperlink(unittest.TestCase):
 	def test_incorrect(self):
 		self.assertEqual(PH.parser_html_get_team_from_hyperlink('<a href="/tems/team-a/" title="TA">team-a</a>'), None)
 
-class function_parser_html_get_round_match_report_link(unittest.TestCase):
+class function_parser_html_wf_get_round_match_report_link(unittest.TestCase):
 
 	def test_correct(self):
-		self.assertEqual(PH.parser_html_get_round_match_report_link('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>)'), CFG.URL_WF_ROOT+'/report/report-1')
+		self.assertEqual(PH.parser_html_wf_get_round_match_report_link('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>)'), CFG.WF_URL_ROOT+'/report/report-1')
 
 	def test_incorrect(self):
-		self.assertEqual(PH.parser_html_get_round_match_report_link('<a href="report/report-1" title="TI2">6:0 (2:0) </a>)'), None)
+		self.assertEqual(PH.parser_html_wf_get_round_match_report_link('<a href="report/report-1" title="TI2">6:0 (2:0) </a>)'), None)
 
 
 class function_parser_html_get_round_match_score(unittest.TestCase):
 
 	def test_correct(self):
-		self.assertEqual(PH.parser_html_get_round_match_scores('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>'), ('6', '0', '2', '0'))
-		self.assertEqual(PH.parser_html_get_round_match_scores('<a href="/report/report-1" title="TI2">16:15 (11:14) </a>'), ('16', '15', '11', '14'))
+		self.assertEqual(PH.parser_html_wf_get_round_match_scores('<a href="/report/report-1" title="TI2">6:0 (2:0) </a>'), ('6', '0', '2', '0'))
+		self.assertEqual(PH.parser_html_wf_get_round_match_scores('<a href="/report/report-1" title="TI2">16:15 (11:14) </a>'), ('16', '15', '11', '14'))
 
-class function_parser_html_sanitize_round_table_row(unittest.TestCase):
+class function_parser_html_wf_sanitize_round_table_row(unittest.TestCase):
 
 	def setUp(self):
 		self.example_1 = ['1', '<img src="https:22.gif alt="team-a, country" title="team-a, country" />', '<a href="/teams/team-a/" title="team-a">', '1', '1', '0', '0', '6:0', '6', '3']
@@ -103,10 +103,10 @@ class function_parser_html_sanitize_round_table_row(unittest.TestCase):
 		self.example_2_out = ['16', 'team-b', '1', '0', '0', '1', '0', '6', '-6', '0']
 
 	def test_correct(self):
-		self.assertEqual(PH.parser_html_sanitize_round_table_row(self.example_1, 1), (self.example_1_out, '1'))
-		self.assertEqual(PH.parser_html_sanitize_round_table_row(self.example_2, 15), (self.example_2_out, '16'))
+		self.assertEqual(PH.parser_html_wf_sanitize_round_table_row(self.example_1, 1), (self.example_1_out, '1'))
+		self.assertEqual(PH.parser_html_wf_sanitize_round_table_row(self.example_2, 15), (self.example_2_out, '16'))
 
-class function_parser_html_sanitize_round_table(unittest.TestCase):
+class function_parser_html_wf_sanitize_round_table(unittest.TestCase):
 
 	def setUp(self):
 		self.round_table_rows_in = [['1', '<img src="https:22.gif alt="team-a, country" title="team-a, country" />', '<a href="/teams/team-a/" title="team-a">', '1', '1', '0', '0', '6:0', '6', '3'],
@@ -115,7 +115,7 @@ class function_parser_html_sanitize_round_table(unittest.TestCase):
 									 ['2', 'team-b', '1', '0', '0', '1', '0', '6', '-6', '0']]
 
 	def test_correct(self):
-		self.assertEqual(PH.parser_html_sanitize_round_table(self.round_table_rows_in), self.round_table_rows_out)
+		self.assertEqual(PH.parser_html_wf_sanitize_round_table(self.round_table_rows_in), self.round_table_rows_out)
 
 
 if __name__ == '__main__':

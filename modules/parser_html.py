@@ -5,7 +5,7 @@ import sys
 
 # User defined modules
 sys.path.insert(0, '{0}/modules'.format(os.environ['REPO_ROOT']))
-import configuration as CFG
+import modules.configuration as CFG
 
 def parser_html_get_table_columns(table_row):
 	return [column.strip() for column in re.findall(CFG.rx_html_table_column, table_row)]
@@ -31,31 +31,31 @@ def parser_html_get_team_from_hyperlink(hyperlink):
 	try: return re.search(CFG.rx_html_hyperlink_team, hyperlink).group(1)
 	except: return None
 
-def parser_html_get_round_match_report_link(hyperlink):
-	try: return CFG.URL_WF_ROOT + re.search(CFG.rx_html_hyperlink, hyperlink).group(1)
+def parser_html_wf_get_round_match_report_link(hyperlink):
+	try: return CFG.WF_URL_ROOT + re.search(CFG.rx_html_hyperlink, hyperlink).group(1)
 	except: None
 
-def parser_html_get_round_match_scores(hyperlink):
+def parser_html_wf_get_round_match_scores(hyperlink):
 	try: 
 		results = re.search(CFG.rx_html_match_scores, hyperlink)
 		return (results.group(1), results.group(2), results.group(3), results.group(4))
 	except: return None 
 
-def parser_html_sanitize_round_match(raw_round_match, first_round_match_date):
+def parser_html_wf_sanitize_round_match(raw_round_match, first_round_match_date):
 	if raw_round_match[0]: match_date = raw_round_match[0]
 	else: match_date = first_round_match_date
 	match_hour = raw_round_match[1]
 	match_home_team = parser_html_get_team_from_hyperlink(raw_round_match[2])
 	match_away_team = parser_html_get_team_from_hyperlink(raw_round_match[4])
-	match_report = parser_html_get_round_match_report_link(raw_round_match[5])
-	HTFT, ATFT, HTHT, ATHT = parser_html_get_round_match_scores(raw_round_match[5])
+	match_report = parser_html_wf_get_round_match_report_link(raw_round_match[5])
+	HTFT, ATFT, HTHT, ATHT = parser_html_wf_get_round_match_scores(raw_round_match[5])
 	match_stats = [match_date, match_hour, match_home_team, match_away_team, HTFT, ATFT, HTHT, ATHT, match_report]
 	if all(match_stats): return match_stats
 	else:
 		CFG.logger.critical("CRITICAL: No round matches data - program - stop")
 		sys.exit(1)
 
-def parser_html_sanitize_round_matches(raw_round_matches):
+def parser_html_wf_sanitize_round_matches(raw_round_matches):
 	"""
 	HTFT = home team full time
 	HTHT = home team half time
@@ -67,7 +67,7 @@ def parser_html_sanitize_round_matches(raw_round_matches):
 	sanitized_matches = []
 	first_round_match_date = raw_round_matches[0][0]
 	for raw_round_matches in raw_round_matches:
-		sanitized_matches.append(parser_html_sanitize_round_match(raw_round_matches, first_round_match_date))
+		sanitized_matches.append(parser_html_wf_sanitize_round_match(raw_round_matches, first_round_match_date))
 	return sanitized_matches
 
 def parser_html_get_goals(goals_input):
@@ -75,7 +75,7 @@ def parser_html_get_goals(goals_input):
 	goals = re.search(rx_get_goals, goals_input)
 	return goals.group(1), goals.group(2)
 
-def parser_html_sanitize_round_table_row(round_table_row, place_in_table):
+def parser_html_wf_sanitize_round_table_row(round_table_row, place_in_table):
 	if not '&nbsp' in round_table_row[0]: place = round_table_row[0]
 	else: place = str(int(place_in_table) + 1)
 	team  = parser_html_get_team_from_hyperlink(round_table_row[2])
@@ -88,11 +88,11 @@ def parser_html_sanitize_round_table_row(round_table_row, place_in_table):
 	points = round_table_row[9]
 	return [place, team, matches_played, matches_won, matches_draw, matches_lost, goals_shot, goals_lost, goals_diff, points], place
 
-def parser_html_sanitize_round_table(raw_round_table_rows):
+def parser_html_wf_sanitize_round_table(raw_round_table_rows):
 	sanitized_round_table = []
 	place_in_table = '1'
 	for round_table_row in raw_round_table_rows:
-		sanitized_round_table_row, place_in_table = parser_html_sanitize_round_table_row(round_table_row, place_in_table)
+		sanitized_round_table_row, place_in_table = parser_html_wf_sanitize_round_table_row(round_table_row, place_in_table)
 		sanitized_round_table.append(sanitized_round_table_row)
 	return sanitized_round_table
 
@@ -101,9 +101,9 @@ def parser_html_get_round_results(infobank_round, string_input):
 	all_html_tables = parser_html_get_round_all_html_tables(infobank_round, html) # Return list of found tables
 
 	raw_round_table = parser_html_get_table_content(all_html_tables[3])
-	round_table = parser_html_sanitize_round_table(raw_round_table[1:])
+	wf_round_table = parser_html_wf_sanitize_round_table(raw_round_table[1:])
 
 	raw_round_matches = parser_html_get_table_content(all_html_tables[1])
-	round_matches = parser_html_sanitize_round_matches(raw_round_matches)
+	round_matches = parser_html_wf_sanitize_round_matches(raw_round_matches)
 
-	return round_table, round_matches
+	return wf_round_table, round_matches
