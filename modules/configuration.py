@@ -8,7 +8,7 @@ import os
 #logger = logging.getLogger(__name__)
 
 logger = logging.getLogger(__name__)
-FORMAT = "%(levelname)s:[%(funcName)s()]: %(message)s"
+FORMAT = "%(levelname)s:[%(funcName)s():%(lineno)d]: %(message)s"
 logging.basicConfig(format=FORMAT)
 logger.setLevel(logging.DEBUG)
 
@@ -39,37 +39,17 @@ def init():
 	global WEB_CONNECTION
 	global SLEEP_LOW
 	global SLEEP_HIGH
-<<<<<<< HEAD
 
 	CURRENT_YEAR = datetime.datetime.now().year
 	REPO_ROOT = os.environ['REPO_ROOT']
 	IB_ROOT = os.path.join(REPO_ROOT,'infobank')
-	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 2, 3, 'bundesliga', 'D1')]
+	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 5, 3, 'bundesliga', 'D1')]
 
-	SLEEP_LOW = 13
-	SLEEP_HIGH = 20
+	SLEEP_LOW = 2
+	SLEEP_HIGH = 10
 
 	URL_WF_ROOT = 'www.worldfootball.net'
-=======
 
-	global rx_html_comment
-	global rx_html_table
-	global rx_html_table_column
-	global rx_html_table_row
-	global rx_html_match_scores
-	global rx_html_hyperlink
-	global rx_html_hyperlink_team
-
-	CURRENT_YEAR = datetime.datetime.now().year
-	REPO_ROOT = os.environ['REPO_ROOT']
-	INFO_BANK_ROOT = os.path.join(REPO_ROOT,'infobank')
-	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 34, 3, 'bundesliga', 'D1')]
-
-	SLEEP_LOW = 13
-	SLEEP_HIGH = 20
-
-	MATCHES_INFO_URL = 'www.worldfootball.net'
->>>>>>> 92a09ca91fa4b7e9bf0b279637e86e90ae753ea3
 	WEB_CONNECTION = 'http://'
 	CURRENT_SEASON = 2018 # Curremt is 2018-2019 (so 2018)
 	SEASONS_BACK = 0 #3
