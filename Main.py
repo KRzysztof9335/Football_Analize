@@ -19,7 +19,7 @@ def main():
     CFG.logger.info("Main started")
     CFG.init()
     CFG.logger.info("Creating infobank: started")
-    IB.ib_create()
+    IB.create()
     CFG.logger.info("Creating infobank: success")
     CFG.logger.info("Main finished")
 

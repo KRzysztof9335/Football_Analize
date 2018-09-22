@@ -44,7 +44,7 @@ def init():
 	CURRENT_YEAR = datetime.datetime.now().year
 	REPO_ROOT = os.environ['REPO_ROOT']
 	IB_ROOT = os.path.join(REPO_ROOT,'infobank')
-	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 5, 3, 'bundesliga', 'D1')]
+	SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 2, 3, 'bundesliga', 'D1')]
 
 	SLEEP_LOW = 2
 	SLEEP_HIGH = 10
