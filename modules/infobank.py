@@ -158,7 +158,7 @@ def verify_round_to_be_created(country_league, season, play_round, ib_round):
         return "skip_round_creation", ""
 
     wf_round_url = CFG.WF_URL_ROUND.format(league_name_wf, season, season + 1, play_round)
-    wf_raw_round_results = WH.webhandler_get_round_results(wf_round_url)
+    wf_raw_round_results = WH.webhandler_get_webpage_content(wf_round_url)
     all_html_tables = PH.parser_html_get_round_all_html_tables(ib_round, wf_raw_round_results)
     raw_round_matches = PH.parser_html_get_table_content(all_html_tables[1])
 
