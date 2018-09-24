@@ -20,9 +20,9 @@ def create_item(item_to_create):
     """
     try:
         os.makedirs(item_to_create)
-        CFG.logger.debug("Item: %s success", item_to_create)
+        CFG.LOGGER.debug("Item: %s success", item_to_create)
     except IOError:
-        CFG.logger.debug("Item: %s already exists, skippking creation", item_to_create)
+        CFG.LOGGER.debug("Item: %s already exists, skippking creation", item_to_create)
 
 
 
@@ -120,7 +120,7 @@ def verify_round_played(ib_round, raw_round_matches):
     Returns True if round was played otherwise return false
     """
     if "-:-" in raw_round_matches[0][5]:
-        CFG.logger.debug("Round %s is future round - skipping further rounds", ib_round)
+        CFG.LOGGER.debug("Round %s is future round - skipping further rounds", ib_round)
         return False
     return True
 
@@ -137,7 +137,7 @@ def verify_round_created(ib_round):
 
     try:
         if os.stat(os.path.join(ib_round, "round_table.txt")).st_size != 0:
-            CFG.logger.debug("Round %s alredy exists - skipping round creation", ib_round)
+            CFG.LOGGER.debug("Round %s alredy exists - skipping round creation", ib_round)
             return True
     except (IOError, ValueError):
         return False # Catching error when file does not exist
@@ -180,7 +180,7 @@ def verify_rounds_to_be_created(country_league, season):
     league = country_league.league_name
 
     if season > CFG.CURRENT_YEAR:
-        CFG.logger.debug("For %s/%s ib stopped - %d is future", country, league, season)
+        CFG.LOGGER.debug("For %s/%s ib stopped - %d is future", country, league, season)
         return False
     return True
 
@@ -241,8 +241,8 @@ def create():
         country = country_league.country
         league = country_league.league_name
 
-        CFG.logger.info("Creating infobank for %s league: %s started", country, league)
+        CFG.LOGGER.info("Creating infobank for %s league: %s started", country, league)
         create_item(os.path.join(CFG.IB_ROOT, country))
         create_item(os.path.join(CFG.IB_ROOT, country, league))
         create_country_league_seasons(country_league)
-        CFG.logger.info("Creating infobank for %s league: %s finished", country, league)
+        CFG.LOGGER.info("Creating infobank for %s league: %s finished", country, league)

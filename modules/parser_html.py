@@ -8,13 +8,13 @@ sys.path.insert(0, '{0}/modules'.format(os.environ['REPO_ROOT']))
 import modules.configuration as CFG
 
 def parser_html_get_table_columns(table_row):
-	return [column.strip() for column in re.findall(CFG.rx_html_table_column, table_row)]
+	return [column.strip() for column in re.findall(CFG.RX_HTML_TABLE_COLUMN, table_row)]
 
 def parser_html_get_table_rows_columns(rows):
 	return [parser_html_get_table_columns(row) for row in rows]
 
 def parser_html_get_table_rows(table):
-	return [row for row in re.findall(CFG.rx_html_table_row, table)]
+	return [row for row in re.findall(CFG.RX_HTML_TABLE_ROW, table)]
 
 def parser_html_get_table_content(raw_table):
 	raw_table_rows = parser_html_get_table_rows(raw_table)
@@ -22,22 +22,22 @@ def parser_html_get_table_content(raw_table):
 	return raw_table_rows_columns
 
 def parser_html_get_round_all_html_tables(infobank_round, string_input):
-	return re.findall(CFG.rx_html_table, string_input)
+	return re.findall(CFG.RX_HTML_TABLE, string_input)
 
 def parser_html_remove_all_comments(string_input):
-	return re.sub(CFG.rx_html_comment, '', string_input)
+	return re.sub(CFG.RX_HTML_COMMENT, '', string_input)
 
 def parser_html_get_team_from_hyperlink(hyperlink):
-	try: return re.search(CFG.rx_html_hyperlink_team, hyperlink).group(1)
+	try: return re.search(CFG.RX_HTML_HYPERLINK_TEAM, hyperlink).group(1)
 	except: return None
 
 def parser_html_wf_get_round_match_report_link(hyperlink):
-	try: return CFG.WF_URL_ROOT + re.search(CFG.rx_html_hyperlink, hyperlink).group(1)
+	try: return CFG.WF_URL_ROOT + re.search(CFG.RX_HTML_HYPERLINK, hyperlink).group(1)
 	except: None
 
 def parser_html_wf_get_round_match_scores(hyperlink):
 	try: 
-		results = re.search(CFG.rx_html_match_scores, hyperlink)
+		results = re.search(CFG.RX_HTML_MATCH_SCORES, hyperlink)
 		return (results.group(1), results.group(2), results.group(3), results.group(4))
 	except: return None 
 
@@ -52,7 +52,7 @@ def parser_html_wf_sanitize_round_match(raw_round_match, first_round_match_date)
 	match_stats = [match_date, match_hour, match_home_team, match_away_team, HTFT, ATFT, HTHT, ATHT, match_report]
 	if all(match_stats): return match_stats
 	else:
-		CFG.logger.critical("CRITICAL: No round matches data - program - stop")
+		CFG.LOGGER.critical("CRITICAL: No round matches data - program - stop")
 		sys.exit(1)
 
 def parser_html_wf_sanitize_round_matches(raw_round_matches):

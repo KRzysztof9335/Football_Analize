@@ -63,5 +63,5 @@ class function_verify_rounds_to_be_created(unittest.TestCase):
 
 if __name__ == '__main__':
 	CFG.init()
-	CFG.logger.setLevel(CFG.logging.CRITICAL)
+	CFG.LOGGER.setLevel(CFG.logging.CRITICAL)
 	unittest.main()

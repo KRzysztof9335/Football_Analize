@@ -20,7 +20,7 @@ class function_main(unittest.TestCase):
 		pass
 	
 	# patch will not affect next testcase :) If we want to mock we need to do it again
-	@patch('infobank.ib_create', side_effect=mocked_infobank_create)
+	@patch('infobank.create', side_effect=mocked_infobank_create)
 	def test_create_infobank_called(self, info_create):
 		main()
 		self.assertEqual(info_create.call_count, 1)
@@ -28,5 +28,5 @@ class function_main(unittest.TestCase):
 
 if __name__ == '__main__':
 	CFG.init()
-	CFG.logger.setLevel(CFG.logging.CRITICAL)
+	CFG.LOGGER.setLevel(CFG.logging.CRITICAL)
 	unittest.main()

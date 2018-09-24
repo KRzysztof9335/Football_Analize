@@ -16,12 +16,12 @@ def main():
     """
     Top level function - controls what will be executed
     """
-    CFG.logger.info("Main started")
+    CFG.LOGGER.info("Main started")
     CFG.init()
-    CFG.logger.info("Creating infobank: started")
+    CFG.LOGGER.info("Creating infobank: started")
     IB.create()
-    CFG.logger.info("Creating infobank: success")
-    CFG.logger.info("Main finished")
+    CFG.LOGGER.info("Creating infobank: success")
+    CFG.LOGGER.info("Main finished")
 
     
 if __name__ == "__main__":
