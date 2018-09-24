@@ -91,26 +91,6 @@ def create_to_write_matches(round_table_matches):
 
 
 
-def create_country_league_season_round(ib_round, wf_raw_round_results):
-    """
-    In - string - absolute path to /path/to/country/league/season/round
-         string - raw round results from worldfootball
-    Out - no out
-    Function comissions other functions raw input from worldfootball (from other sources it
-    downloads) to parse, prepare content to write and wirtes to file
-    """
-    create_item(ib_round)
-    round_table, round_matches = PH.parser_html_get_round_results(ib_round, wf_raw_round_results)
-
-    table_to_write = create_to_write_table(round_table)
-    matches_to_write, round_matches_names = create_to_write_matches(round_matches)
-
-    save_round_table(ib_round, table_to_write)
-    save_round_matches(ib_round, round_matches_names, matches_to_write)
-
-
-
-
 
 def verify_round_played(ib_round, raw_round_matches):
     """
@@ -158,9 +138,9 @@ def verify_round_to_be_created(country_league, season, play_round, ib_round):
         return "skip_round_creation", ""
 
     wf_round_url = CFG.WF_URL_ROUND.format(league_name_wf, season, season + 1, play_round)
-    wf_raw_round_results = WH.webhandler_get_webpage_content(wf_round_url)
-    all_html_tables = PH.parser_html_get_round_all_html_tables(ib_round, wf_raw_round_results)
-    raw_round_matches = PH.parser_html_get_table_content(all_html_tables[1])
+    wf_raw_round_results = WH.get_webpage_content(wf_round_url)
+    all_html_tables = PH.get_round_all_html_tables(wf_raw_round_results)
+    raw_round_matches = PH.get_table_content(all_html_tables[1])
 
     if not verify_round_played(ib_round, raw_round_matches):
         return "skip_all", ""
@@ -186,6 +166,27 @@ def verify_rounds_to_be_created(country_league, season):
 
 
 
+
+def create_country_league_season_round(ib_round, wf_raw_round_results):
+    """
+    In - string - absolute path to /path/to/country/league/season/round
+         string - raw round results from worldfootball
+    Out - no out
+    Function comissions other functions raw input from worldfootball (from other sources it
+    downloads) to parse, prepare content to write and wirtes to file
+    """
+    create_item(ib_round)
+    round_table, round_matches = PH.wf_get_round_results(wf_raw_round_results)
+
+    table_to_write = create_to_write_table(round_table)
+    matches_to_write, round_matches_names = create_to_write_matches(round_matches)
+
+    save_round_table(ib_round, table_to_write)
+    save_round_matches(ib_round, round_matches_names, matches_to_write)
+
+
+    
+    
 
 def create_country_league_season_rounds(country_league, season):
     """

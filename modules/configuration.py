@@ -47,7 +47,7 @@ def init():
     SUPPORTED_LEAGUES = [CountryLeague('Germany', 'bundesliga_1', 2, 3, 'bundesliga', 'D1')]
 
     SLEEP_LOW = 2
-    SLEEP_HIGH = 10
+    SLEEP_HIGH = 4
 
     WEB_PROT = 'http://'
     WF_URL_ROOT = WEB_PROT + 'www.worldfootball.net'
@@ -64,6 +64,7 @@ def init():
     global RX_HTML_MATCH_SCORES
     global RX_HTML_HYPERLINK
     global RX_HTML_HYPERLINK_TEAM
+    global RX_WF_GOALS
 
     RX_HTML_COMMENT = re.compile(r'<!--.*?-->', re.DOTALL)
     RX_HTML_TABLE = re.compile(r'<table.*?</table>', re.DOTALL)
@@ -72,3 +73,4 @@ def init():
     RX_HTML_MATCH_SCORES = re.compile(r'<.*?>(\d+):(\d+)\s+\((\d+):(\d+)\)\s+<.*?>')
     RX_HTML_HYPERLINK = re.compile(r'<a\s+href="(\/.*?)".*')
     RX_HTML_HYPERLINK_TEAM = re.compile(r"<a\s+href=\"\/teams\/(.*?)\/.*")
+    RX_WF_GOALS = re.compile(r'(\d+):(\d+)')
