@@ -167,31 +167,55 @@ def verify_rounds_to_be_created(country_league, season):
 
 
 
-def create_country_league_season_round(ib_round, wf_raw_round_results):
+def create_country_league_season_round(country_league, season, ib_round, wf_raw_round_results):
     """
     In - string - absolute path to /path/to/country/league/season/round
          string - raw round results from worldfootball
     Out - no out
     Function comissions other functions raw input from worldfootball (from other sources it
-    downloads) to parse, prepare content to write and wirtes to file
+    downloads) to parse, prepare content to write and wirtes to file.
+    Function download content for football data
     """
     create_item(ib_round)
-    round_table, round_matches = PH.wf_get_round_results(wf_raw_round_results)
-
+    round_table, wf_round_matches = PH.wf_get_round_results(wf_raw_round_results)
+    
     table_to_write = create_to_write_table(round_table)
-    matches_to_write, round_matches_names = create_to_write_matches(round_matches)
+    matches_to_write, round_matches_names = create_to_write_matches(wf_round_matches)
 
     save_round_table(ib_round, table_to_write)
     save_round_matches(ib_round, round_matches_names, matches_to_write)
 
 
     
-    
+def fd_excel_download(country_league, season, fd_excel_path):
+    fd_res = WH.get_webpage_content(CFG.FD_URL_COUNTRY.format(country_league.fd_url_name))
+    fd_excel_link = CFG.FD_URL_ROOT + "/" + PH.fd_get_stats_link(country_league, season, fd_res)
+    print(fd_excel_link)
+    WH.download_file_and_save(fd_excel_link, fd_excel_path)
+    sys.exit(1)
 
+def translate(string_in, dictionary):
+    """
+    In - string - text, possibly multiline, to be translated
+       - dict - dictionary, describing translation process
+    Out - string - translated text
+    """
+    string = string_in
+    for key, value in dictionary.items():
+        string = re.sub(key, value, string)
+    return string
+    
+def fd_excel_translate_team_names(fd_excel_path):
+    raw_excel_content = CMN.common_get_file_content(fd_excel_path)
+    return CMN.translate(raw_excel_content, CFG.FD_TO_WF)
+    
+    
+    
 def create_country_league_season_rounds(country_league, season):
     """
     In - CountryLeague Object, season Int
     Out - None
+    Function downloads football-data excel. After creating all rounds excel is deleted
     Function invokes function checking what action should be done in context of
     round. If return of invoked function is to create_round, then round is created
     """
@@ -199,20 +223,25 @@ def create_country_league_season_rounds(country_league, season):
     league = country_league.league_name
     play_rounds = list(range(1, country_league.league_rounds + 1))
 
+    fd_excel_path = CFG.IB_ROOT + "/" + country_league.country + "/" + country_league.league_name \
+                    + "/" + "{0}-{1}".format(season, season + 1) + "/excel.csv"
+    fd_excel = fd_excel_translate_team_names(fd_excel_path)
+    
     for play_round in play_rounds:
         ib_round = os.path.join(CFG.IB_ROOT,
                                 country,
                                 league,
                                 '{0}-{1}'.format(season, season+1),
                                 'round_{0}'.format(play_round))
-        act, res = verify_round_to_be_created(country_league, season, play_round, ib_round)
+        act, res_wf = verify_round_to_be_created(country_league, season, play_round, ib_round)
         if act == "create_round":
-            create_country_league_season_round(ib_round, res)
+            create_country_league_season_round(country_league, season, ib_round, res_wf)
         elif act == "skip_round_creation":
             continue
         else:
             break
 
+    #os.remove(fd_excel_path)
 
 
 def create_country_league_seasons(country_league):
@@ -222,10 +251,12 @@ def create_country_league_seasons(country_league):
     For each season defined in configuration SEASAONS, it checks if create season,
     and if so, it invokes function resposnible for season creation else it breaks.
     """
-
+    country = country_league.country
+    league = country_league.league_name
     for season in CFG.SEASONS:
         create_season = verify_rounds_to_be_created(country_league, season)
         if create_season:
+            create_item(os.path.join(CFG.IB_ROOT, country, league, '{0}-{1}'.format(season, season+1)))           
             create_country_league_season_rounds(country_league, season)
 
 

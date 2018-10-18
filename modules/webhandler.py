@@ -35,6 +35,13 @@ def download_webpage_content(url):
     time.sleep(random.randint(CFG.SLEEP_LOW, CFG.SLEEP_HIGH))
     return urllib.request.urlopen(url).read().decode('utf-8')
 
+def download_file_and_save(url_file, path_excel):
+    """
+    In - string - url to file to download
+       - string - path where file will be saved
+    """
+    urllib.request.urlretrieve(url_file, path_excel)
+
 def get_webpage_content(url):
     """
     In - string - url to download

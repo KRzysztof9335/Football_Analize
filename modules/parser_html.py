@@ -90,6 +90,22 @@ def get_team_from_hyperlink(hyperlink):
 
 
 
+def fd_get_stats_link(country_league, season, html):
+    """
+    In - country_legaue named tuple
+         string - season
+         string - html documents
+    Out - string - full url to csv with data
+    """
+    rx = re.compile(r'Season {0}/{1}.*?HREF=\"(.*?{2}\.csv)\"'.format(season, int(season) + 1,
+                                                                      country_league.league_name_fd),
+                                                                      re.DOTALL)
+    link = re.search(rx, html).group(1)
+    return CFG.FD_URL_ROOT + "/" + link
+    
+    
+    
+
 def wf_get_round_match_report_link(hyperlink):
     """
     In - string - representing match report part of url
