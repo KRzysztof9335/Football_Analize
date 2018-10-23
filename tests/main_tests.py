@@ -16,17 +16,17 @@ from Main import *
 
 class function_main(unittest.TestCase):
 
-	def mocked_infobank_create():
-		pass
-	
-	# patch will not affect next testcase :) If we want to mock we need to do it again
-	@patch('infobank.create', side_effect=mocked_infobank_create)
-	def test_create_infobank_called(self, info_create):
-		main()
-		self.assertEqual(info_create.call_count, 1)
+    def mocked_infobank_create():
+        pass
+    
+    # patch will not affect next testcase :) If we want to mock we need to do it again
+    @patch('infobank.create', side_effect=mocked_infobank_create)
+    def test_create_infobank_called(self, info_create):
+        main()
+        self.assertEqual(info_create.call_count, 1)
 
 
 if __name__ == '__main__':
-	CFG.init()
-	CFG.LOGGER.setLevel(CFG.logging.CRITICAL)
-	unittest.main()
+    CFG.init()
+    CFG.LOGGER.setLevel(CFG.logging.CRITICAL)
+    unittest.main()

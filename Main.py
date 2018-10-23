@@ -23,6 +23,6 @@ def main():
     CFG.LOGGER.info("Creating infobank: success")
     CFG.LOGGER.info("Main finished")
 
-    
+
 if __name__ == "__main__":
     main()
